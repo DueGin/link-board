@@ -1,6 +1,6 @@
 {
   "name": "link-board",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "description": "本地优先的人脉关系图谱桌面应用",
   "scripts": {

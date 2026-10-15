@@ -606,7 +606,8 @@ function BoardApp() {
                     ),
                   }))
                 }
-                onSelectRelation={(id) => setSelEdges(new Set([id]))}
+                // 面板优先显示选中的人，只选关系不清掉人的话面板不会切换
+                onSelectRelation={(id) => selectRelation(id, false)}
                 onDelete={() =>
                   onNodesChange([{ type: 'remove', id: selectedPerson.id }])
                 }
