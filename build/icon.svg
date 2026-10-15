@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="surface" x1="0" y1="0" x2="0.8" y2="1">
+      <stop stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#eaf0f2"/>
+    </linearGradient>
+    <filter id="tile-shadow" x="-12%" y="-12%" width="124%" height="130%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#263c4b" flood-opacity="0.16"/>
+    </filter>
+    <filter id="node-shadow" x="-30%" y="-30%" width="160%" height="170%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="7" stdDeviation="7" flood-color="#264558" flood-opacity="0.16"/>
+    </filter>
+  </defs>
+  <!-- 824 像素连续圆角底板；画布外缘保持透明。 -->
+  <path d="M 370 100 H 654 C 852 100 924 172 924 370 V 654 C 924 852 852 924 654 924 H 370 C 172 924 100 852 100 654 V 370 C 100 172 172 100 370 100 Z"
+    fill="url(#surface)" stroke="#ffffff" stroke-width="2" filter="url(#tile-shadow)"/>
+  <!-- 曲线从节点中心出发，圆点覆盖端点，小尺寸仍保持清晰。 -->
+  <g fill="none" stroke="#a6b8c3" stroke-width="26" stroke-linecap="round">
+    <path d="M 310 320 C 310 468 478 370 492 510"/>
+    <path d="M 492 510 C 650 530 585 346 724 346"/>
+    <path d="M 492 510 C 476 688 662 584 662 722"/>
+  </g>
+  <g filter="url(#node-shadow)">
+    <circle cx="310" cy="320" r="79" fill="#d84f68"/>
+    <circle cx="724" cy="346" r="75" fill="#0e9f8a"/>
+    <circle cx="662" cy="722" r="79" fill="#e07b35"/>
+    <circle cx="492" cy="510" r="116" fill="#2f8fd6"/>
+  </g>
+</svg>

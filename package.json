@@ -1,0 +1,93 @@
+{
+  "name": "link-board",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "本地优先的人脉关系图谱桌面应用",
+  "scripts": {
+    "icon": "node scripts/build-icon.mjs",
+    "dev": "concurrently -n server,web \"tsx watch server/index.ts\" \"vite\"",
+    "build": "vite build",
+    "start": "NODE_ENV=production tsx server/index.ts",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json",
+    "dev:desktop": "node scripts/build-electron.mjs && concurrently --kill-others -n web,desktop \"vite --strictPort\" \"node scripts/dev-desktop.mjs\"",
+    "build:desktop": "vite build && node scripts/build-electron.mjs",
+    "dist": "pnpm build:desktop && electron-builder --mac --arm64"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.30.2",
+  "dependencies": {
+    "@xyflow/react": "12.12.0",
+    "d3-force": "3.0.0",
+    "express": "5.3.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@types/d3-force": "3.0.10",
+    "@types/express": "5.0.6",
+    "@types/node": "26.6.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.1.2",
+    "concurrently": "10.0.6",
+    "electron": "44.7.2",
+    "electron-builder": "26.15.3",
+    "esbuild": "0.28.2",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2",
+    "vite": "8.3.4",
+    "vitest": "5.0.4"
+  },
+  "main": "dist-electron/main.cjs",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "electron",
+      "esbuild"
+    ]
+  },
+  "build": {
+    "appId": "com.linkboard.app",
+    "productName": "人脉图谱",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*",
+      "package.json",
+      "!**/*.map",
+      "!node_modules/**/*"
+    ],
+    "asar": true,
+    "compression": "maximum",
+    "electronLanguages": [
+      "zh_CN",
+      "zh_TW",
+      "en"
+    ],
+    "npmRebuild": false,
+    "mac": {
+      "icon": "build/icon.icns",
+      "category": "public.app-category.productivity",
+      "identity": null,
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "arm64"
+          ]
+        }
+      ]
+    },
+    "electronDist": "node_modules/electron/dist"
+  }
+}
