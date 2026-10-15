@@ -550,9 +550,21 @@ body {
   background: var(--surface);
   border: 1px solid var(--line-strong);
   color: var(--text-2);
-  pointer-events: none;
+  pointer-events: all;
+  cursor: pointer;
   white-space: nowrap;
+  transition: border-color 0.12s, color 0.12s;
 }
+
+.edge-label:hover { border-color: var(--text-3); color: var(--text); }
+
+.edge-label.selected {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.edge-label:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 
 .edge-label.dim { opacity: 0.3; }
 

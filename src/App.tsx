@@ -108,6 +108,20 @@ function BoardApp() {
     [board, selPeople, hits, searching],
   );
 
+  // 点击关系标签：普通点击只选这一条，按住修饰键时追加/取消
+  const selectRelation = useCallback((id: string, additive: boolean) => {
+    if (additive) {
+      setSelEdges((prev) => {
+        const next = new Set(prev);
+        if (next.has(id)) next.delete(id); else next.add(id);
+        return next;
+      });
+      return;
+    }
+    setSelPeople(new Set());
+    setSelEdges(new Set([id]));
+  }, []);
+
   const edges: Edge[] = useMemo(
     () =>
       (board?.relations ?? []).map((r) => ({
@@ -120,9 +134,10 @@ function BoardApp() {
           label: r.label || undefined,
           strength: r.strength,
           dim: searching && !hits.has(r.source) && !hits.has(r.target),
+          onSelect: selectRelation,
         },
       })),
-    [board, selEdges, searching, hits],
+    [board, selEdges, searching, hits, selectRelation],
   );
 
   // 拖动中跟随的本地节点状态，拖拽结束才写回 board
@@ -132,7 +147,15 @@ function BoardApp() {
   flowNodesRef.current = flowNodes;
   const dragging = useRef(false);
   useEffect(() => {
-    if (!dragging.current) setFlowNodes(boardNodes);
+    if (dragging.current) return;
+    // 保留 React Flow 已量好的尺寸：整体替换会让节点变回“未测量”，连线要等重新测量后才画，会闪一下
+    setFlowNodes((prev) => {
+      const measured = new Map(prev.map((n) => [n.id, n.measured]));
+      return boardNodes.map((n) => {
+        const m = measured.get(n.id);
+        return m ? { ...n, measured: m } : n;
+      });
+    });
   }, [boardNodes]);
 
   const onNodesChange = useCallback(

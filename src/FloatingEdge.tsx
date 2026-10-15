@@ -4,7 +4,13 @@ import {
 } from '@xyflow/react';
 import { avatarSize, type PersonNodeData } from './PersonNode';
 
-type EdgeData = { label?: string; strength?: number; dim?: boolean };
+type EdgeData = {
+  label?: string;
+  strength?: number;
+  dim?: boolean;
+  // 点击标签胶囊时选中这条关系；additive 表示按住修饰键追加选择
+  onSelect?: (id: string, additive: boolean) => void;
+};
 
 // 头像（圆）在画布上的圆心与半径
 function circle(node: InternalNode) {
@@ -34,7 +40,7 @@ function curve(sx: number, sy: number, tx: number, ty: number, bendSign: number)
 }
 
 // floating edge：沿两圆心连线，从各自圆的边缘出发，节点移到哪个方向线就跟到哪个方向
-export function FloatingEdge({ id, source, target, data: raw }: EdgeProps) {
+export function FloatingEdge({ id, source, target, selected, data: raw }: EdgeProps) {
   const sourceNode = useInternalNode(source);
   const targetNode = useInternalNode(target);
   if (!sourceNode || !targetNode) return null;
@@ -62,10 +68,22 @@ export function FloatingEdge({ id, source, target, data: raw }: EdgeProps) {
       />
       {data.label && (
         <EdgeLabelRenderer>
-          {/* 胶囊本身不接收点击，点击穿透到下方的线选中关系 */}
+          {/* 胶囊浮在线的上一层，必须自己接收点击；穿透下去会落到空白画布、清空选中 */}
           <div
-            className={`edge-label nodrag nopan${data.dim ? ' dim' : ''}`}
+            role="button"
+            tabIndex={0}
+            aria-label={`选中关系：${data.label}`}
+            className={`edge-label nodrag nopan${selected ? ' selected' : ''}${data.dim ? ' dim' : ''}`}
             style={{ transform: `translate(-50%, -50%) translate(${lx}px, ${ly}px)` }}
+            onClick={(e) => {
+              e.stopPropagation();
+              data.onSelect?.(id, e.metaKey || e.ctrlKey || e.shiftKey);
+            }}
+            onKeyDown={(e) => {
+              if (e.key !== 'Enter' && e.key !== ' ') return;
+              e.preventDefault();
+              data.onSelect?.(id, false);
+            }}
           >
             {data.label}
           </div>
